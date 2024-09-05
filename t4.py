@@ -86,7 +86,7 @@ while cap.isOpened():
         cv2.putText(image, "No hand detected", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
     # Display the image
-    cv2.imshow('Hand Tracking', image)
+    #cv2.imshow('Hand Tracking', image)
 
     if cv2.waitKey(5) & 0xFF == 27:  # Exit on ESC
         break

@@ -23,6 +23,9 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 PAN_MIN, PAN_MAX = -180, 180
 TILT_MIN, TILT_MAX = -30, 90
 
+def map_range(x, in_min, in_max, out_min, out_max):
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+
 def send_command(pan, tilt):
     command = {
         "T": 133,
@@ -59,9 +62,13 @@ while cap.isOpened():
             index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
             x, y = index_finger_tip.x, index_finger_tip.y
 
-            # Map x and y to pan and tilt
-            pan = 0.5625 * x * 640 - 180
-            tilt = 0.28125 * y * 480 - 30
+            print(f"Hand X: {x:.2f}, Hand Y: {y:.2f}")
+
+            # Map x and y to pan and tilt using a more precise mapping function
+            pan = map_range(x, 0, 1, PAN_MIN, PAN_MAX)
+            tilt = map_range(y, 0, 1, TILT_MIN, TILT_MAX)
+
+            print(f"Pan: {pan:.2f}, Tilt: {tilt:.2f}")
 
             send_command(pan, tilt)
 
